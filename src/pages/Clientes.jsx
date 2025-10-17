@@ -1,7 +1,12 @@
-const Clientes = () => (
-  <div>
-    <h1 className="mb-4 text-2xl font-bold">Clientes</h1>
-    <p>Cadastro e histórico dos clientes da barbearia.</p>
-  </div>
-);
+import React from "react";
+
+const Clientes = () => {
+  return (
+    <div className="h-full p-6 bg-blue-100">
+      <h1>Clientes funcionando!</h1>
+      <p>Conteúdo de teste dos Clientes.</p>
+    </div>
+  );
+};
+
 export default Clientes;
