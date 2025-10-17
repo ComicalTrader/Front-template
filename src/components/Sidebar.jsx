@@ -9,6 +9,7 @@ const Sidebar = () => {
     { name: "Agenda", path: "/agenda" },
     { name: "Financeiro", path: "/financeiro" },
     { name: "Clientes", path: "/clientes" },
+    { name: "Estoque", path: "/Estoque" }
   ];
 
   return (

@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Agenda from "./pages/Agenda";
 import Financeiro from "./pages/Financeiro";
 import Clientes from "./pages/Clientes";
+import Estoque from "./pages/Estoque";
 // import Login from "./pages/Login"; // deixamos de fora por enquanto
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/agenda" element={<Agenda />} />
           <Route path="/financeiro" element={<Financeiro />} />
           <Route path="/clientes" element={<Clientes />} />
+          <Route path="/Estoques" element={<Estoque />} />
         </Routes>
       </main>
     </div>
