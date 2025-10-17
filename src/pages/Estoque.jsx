@@ -10,6 +10,7 @@ const Estoque = () => {
 
   const addItem = (e) => {
     e.preventDefault();
+    if (!newItem.name.trim()) return;
     setItems([...items, newItem]);
     setNewItem({ name: "", quantity: 0, price: 0 });
   };
@@ -18,25 +19,34 @@ const Estoque = () => {
   const totalValue = items.reduce((acc, i) => acc + i.quantity * i.price, 0);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8 p-6">
       {/* Dashboard */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="p-6 text-white bg-blue-500 shadow-lg rounded-2xl">
-          <h2 className="mb-2 text-lg font-semibold">Total de itens</h2>
-          <p className="text-3xl">{totalItems}</p>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="flex flex-col items-center justify-center p-5 text-white bg-blue-600 shadow-md rounded-2xl">
+          <h2 className="text-lg font-semibold">Total de Itens</h2>
+          <p className="mt-2 text-4xl font-bold">{totalItems}</p>
         </div>
-        <div className="p-6 text-white bg-green-500 shadow-lg rounded-2xl">
-          <h2 className="mb-2 text-lg font-semibold">Valor total</h2>
-          <p className="text-3xl">R$ {totalValue}</p>
+
+        <div className="flex flex-col items-center justify-center p-5 text-white bg-green-600 shadow-md rounded-2xl">
+          <h2 className="text-lg font-semibold">Valor Total</h2>
+          <p className="mt-2 text-4xl font-bold">R$ {totalValue.toFixed(2)}</p>
+        </div>
+
+        <div className="flex flex-col items-center justify-center p-5 text-white bg-gray-800 shadow-md rounded-2xl">
+          <h2 className="text-lg font-semibold">Produtos Cadastrados</h2>
+          <p className="mt-2 text-4xl font-bold">{items.length}</p>
         </div>
       </div>
 
-      {/* Formulário adicionar */}
-      <form onSubmit={addItem} className="flex flex-col gap-4 p-6 bg-white rounded shadow-md">
+      {/* Formulário de Adição */}
+      <form
+        onSubmit={addItem}
+        className="grid gap-4 p-6 bg-white shadow-md rounded-2xl sm:grid-cols-2 lg:grid-cols-4"
+      >
         <input
           type="text"
           placeholder="Nome do item"
-          className="p-2 border rounded"
+          className="p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
           value={newItem.name}
           onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
           required
@@ -44,40 +54,62 @@ const Estoque = () => {
         <input
           type="number"
           placeholder="Quantidade"
-          className="p-2 border rounded"
+          className="p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
           value={newItem.quantity}
-          onChange={(e) => setNewItem({ ...newItem, quantity: Number(e.target.value) })}
+          onChange={(e) =>
+            setNewItem({ ...newItem, quantity: Number(e.target.value) })
+          }
           required
         />
         <input
           type="number"
           placeholder="Preço unitário"
-          className="p-2 border rounded"
+          className="p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
           value={newItem.price}
-          onChange={(e) => setNewItem({ ...newItem, price: Number(e.target.value) })}
+          onChange={(e) =>
+            setNewItem({ ...newItem, price: Number(e.target.value) })
+          }
           required
         />
-        <button type="submit" className="p-2 text-white bg-blue-600 rounded hover:bg-blue-500">
+        <button
+          type="submit"
+          className="p-3 font-medium text-white transition-all bg-blue-600 rounded-lg hover:bg-blue-700"
+        >
           Adicionar
         </button>
       </form>
 
-      {/* Lista de produtos */}
-      <div className="overflow-x-auto">
-        <table className="w-full border border-collapse border-gray-300 table-auto">
-          <thead className="bg-gray-200">
+      {/* Lista de Produtos */}
+      <div className="overflow-x-auto bg-white shadow-md rounded-2xl">
+        <table className="w-full border-collapse">
+          <thead className="bg-gray-100 border-b">
             <tr>
-              <th className="px-4 py-2 text-left border border-gray-300">Produto</th>
-              <th className="px-4 py-2 text-left border border-gray-300">Quantidade</th>
-              <th className="px-4 py-2 text-left border border-gray-300">Preço</th>
+              <th className="px-4 py-3 font-semibold text-left text-gray-600">
+                Produto
+              </th>
+              <th className="px-4 py-3 font-semibold text-left text-gray-600">
+                Quantidade
+              </th>
+              <th className="px-4 py-3 font-semibold text-left text-gray-600">
+                Preço (R$)
+              </th>
+              <th className="px-4 py-3 font-semibold text-center text-gray-600">
+                Total (R$)
+              </th>
             </tr>
           </thead>
           <tbody>
             {items.map((item, i) => (
-              <tr key={i} className="hover:bg-gray-100">
-                <td className="px-4 py-2 border border-gray-300">{item.name}</td>
-                <td className="px-4 py-2 border border-gray-300">{item.quantity}</td>
-                <td className="px-4 py-2 border border-gray-300">R$ {item.price}</td>
+              <tr
+                key={i}
+                className="transition-colors border-b hover:bg-gray-50"
+              >
+                <td className="px-4 py-3">{item.name}</td>
+                <td className="px-4 py-3">{item.quantity}</td>
+                <td className="px-4 py-3">R$ {item.price.toFixed(2)}</td>
+                <td className="px-4 py-3 font-medium text-center">
+                  R$ {(item.quantity * item.price).toFixed(2)}
+                </td>
               </tr>
             ))}
           </tbody>
