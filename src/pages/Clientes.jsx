@@ -1,8 +1,5 @@
-const Clientes = () => (
-  <div>
-    <h1 className="text-2xl font-semibold mb-4">Clientes</h1>
-    <p>Histórico e informações dos clientes.</p>
-  </div>
-);
+const Clientes = () => {
+  return <h1 style={{ padding: "1rem" }}>Página Clientes</h1>;
+};
 
 export default Clientes;
