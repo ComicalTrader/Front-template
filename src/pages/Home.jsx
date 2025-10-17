@@ -1,35 +1,16 @@
 import React from "react";
+import Card from "../components/Card.jsx";
 
 const Home = () => {
   const cards = [
-    {
-      title: "Dashboard",
-      value: "Visão geral do mês",
-      color: "bg-blue-500",
-    },
-    {
-      title: "Financeiro",
-      value: "R$ 12.540,00",
-      color: "bg-green-500",
-    },
-    {
-      title: "Agenda",
-      value: "7 horários marcados hoje",
-      color: "bg-yellow-500",
-    },
+    { title: "Dashboard", value: "Visão geral do mês", color: "#3b82f6" },
+    { title: "Financeiro", value: "R$ 12.540,00", color: "#10b981" },
+    { title: "Agenda", value: "7 horários marcados hoje", color: "#f59e0b" },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {cards.map((card) => (
-        <div
-          key={card.title}
-          className={`${card.color} text-white rounded-2xl shadow-lg p-6 transition-transform hover:scale-105`}
-        >
-          <h2 className="text-xl font-semibold mb-2">{card.title}</h2>
-          <p className="text-lg">{card.value}</p>
-        </div>
-      ))}
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "20px" }}>
+      {cards.map((c) => <Card key={c.title} {...c} />)}
     </div>
   );
 };
