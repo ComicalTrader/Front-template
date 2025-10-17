@@ -7,6 +7,7 @@ import Financeiro from "./pages/Financeiro";
 import Clientes from "./pages/Clientes";
 import Estoque from "./pages/Estoque";
 import Chatbot from "./pages/Chatbot";
+import Configuracoes from "./pages/Configuracoes";
 
 // import Login from "./pages/Login"; // deixamos de fora por enquanto
 
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/clientes" element={<Clientes />} />
           <Route path="/estoque" element={<Estoque />} />
           <Route path="/chatbot" element={<Chatbot />} />
+          <Route path="/configuracoes" element={<Configuracoes />} />
         </Routes>
       </main>
     </div>

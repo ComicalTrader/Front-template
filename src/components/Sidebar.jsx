@@ -9,27 +9,34 @@ import {
   ChevronLeft,
   Box,
   User,
+  Settings,
 } from "lucide-react";
-import Agenda from "../pages/Agenda";
 
 const Sidebar = () => {
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // Toggle via botão
+  const [isHover, setIsHover] = useState(false); // Toggle via hover
 
-  const menuItems = [
+  const mainItems = [
     { name: "Home", path: "/home", icon: Home },
     { name: "Agenda", path: "/agenda", icon: Calendar },
     { name: "Financeiro", path: "/financeiro", icon: DollarSign },
     { name: "Clientes", path: "/clientes", icon: Users },
     { name: "Estoque", path: "/estoque", icon: Box },
-    { name: "Agendamento", path: "/chatbot", icon: User }
+    { name: "Chatbot", path: "/chatbot", icon: User },
   ];
+
+  const configItem = { name: "Configurações", path: "/configuracoes", icon: Settings };
 
   return (
     <aside
-      className={`flex flex-col h-screen p-4 text-white bg-gray-900 transition-all duration-300 ease-in-out shadow-lg ${
-        isOpen ? "w-64 items-start" : "w-20 items-center"
-      }`}
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
+      className={`
+        flex flex-col h-screen p-4 text-white bg-gray-900 shadow-lg
+        transition-all duration-300 ease-in-out
+        ${isOpen || isHover ? "w-64 items-start" : "w-20 items-center"}
+      `}
     >
       {/* 🔘 Botão de abrir/fechar */}
       <button
@@ -40,15 +47,15 @@ const Sidebar = () => {
       </button>
 
       {/* 🧾 Título */}
-      {isOpen && (
+      {(isOpen || isHover) && (
         <h2 className="mb-8 text-2xl font-bold text-white transition-opacity duration-300">
           BarberPro
         </h2>
       )}
 
-      {/* 📋 Menu */}
-      <ul className="flex flex-col w-full gap-2">
-        {menuItems.map((item) => {
+      {/* 📋 Menu principal */}
+      <ul className="flex flex-col flex-1 w-full gap-2">
+        {mainItems.map((item) => {
           const isActive = location.pathname === item.path;
           const Icon = item.icon;
 
@@ -64,14 +71,35 @@ const Sidebar = () => {
               >
                 <Icon
                   className="transition-transform duration-300"
-                  size={isOpen ? 22 : 28}
+                  size={isOpen || isHover ? 22 : 28}
                   strokeWidth={1.8}
                 />
-                {isOpen && <span className="text-sm">{item.name}</span>}
+                {(isOpen || isHover) && <span className="text-sm">{item.name}</span>}
               </Link>
             </li>
           );
         })}
+      </ul>
+
+      {/* ⚙️ Configurações no final */}
+      <ul className="flex flex-col w-full gap-2">
+        <li>
+          <Link
+            to={configItem.path}
+            className={`flex items-center gap-4 px-3 py-2 rounded-xl transition-all duration-200 ${
+              location.pathname === configItem.path
+                ? "bg-gray-800 text-white font-semibold"
+                : "text-gray-400 hover:text-white hover:bg-gray-800"
+            }`}
+          >
+            <configItem.icon
+              className="transition-transform duration-300"
+              size={isOpen || isHover ? 22 : 28}
+              strokeWidth={1.8}
+            />
+            {(isOpen || isHover) && <span className="text-sm">{configItem.name}</span>}
+          </Link>
+        </li>
       </ul>
     </aside>
   );
