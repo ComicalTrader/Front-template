@@ -1,14 +1,12 @@
 import React from "react";
-import Sidebar from "./components/Sidebar.jsx";
-import Home from "./pages/Home.jsx";
+import Sidebar from "./components/Sidebar";
+import Home from "./pages/Home";
 
 const App = () => {
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <main className="flex-1 p-6 bg-gray-100">
-        <Home />
-      </main>
+      <Home />
     </div>
   );
 };

@@ -8,7 +8,7 @@ const Home = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+    <div className="grid flex-1 grid-cols-1 gap-6 p-6 md:grid-cols-3">
       {cards.map((card) => (
         <div
           key={card.title}
