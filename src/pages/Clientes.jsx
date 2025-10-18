@@ -1,11 +1,16 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Pencil, Trash, PlusCircle, XCircle } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 // Dados simulados iniciais
 const initialHistory = [
-  { name: "João Silva", type: "Corte clássico", value: 50, date: "2025-10-17", notes: "Prefere máquina 3" },
+  { name: "João Silva", type: "Corte clássico", value: 50, date: "2025-11-17", notes: "Prefere máquina 3" },
   { name: "Maria Souza", type: "Degradê", value: 60, date: "2025-10-17", notes: "" },
-  { name: "Carlos Pereira", type: "Barba", value: 30, date: "2025-10-16", notes: "Alergia a produtos fortes" },
+  { name: "João Silva", type: "Corte clássico", value: 50, date: "2025-07-17", notes: "Prefere máquina 3" },
+  { name: "Maria Souza", type: "Degradê", value: 60, date: "2025-10-17", notes: "" },
+  { name: "João Silva", type: "Corte clássico", value: 50, date: "2025-12-17", notes: "Prefere máquina 3" },
+  { name: "Maria Souza", type: "Degradê", value: 60, date: "2025-01-17", notes: "" },
+  { name: "Carlos Pereira", type: "Barba", value: 30, date: "2025-09-16", notes: "Alergia a produtos fortes" },
 ];
 
 const Clientes = () => {
@@ -21,6 +26,15 @@ const Clientes = () => {
   });
   const [search, setSearch] = useState("");
   const [filterDate, setFilterDate] = useState("");
+
+  const location = useLocation();
+
+  // Aplica filtro vindo via navegação (ex.: do dashboard)
+  useEffect(() => {
+    if (location.state?.filterMonth) {
+      setFilterDate(location.state.filterMonth);
+    }
+  }, [location.state]);
 
   // Estatísticas
   const today = new Date().toISOString().slice(0, 10);
@@ -52,11 +66,11 @@ const Clientes = () => {
     if (selectedClient === index) setSelectedClient(null);
   };
 
-  // Filtrar e buscar
+  // Histórico filtrado
   const filteredHistory = useMemo(() => {
     return history
       .filter(h => h.name.toLowerCase().includes(search.toLowerCase()))
-      .filter(h => (filterDate ? h.date === filterDate : true))
+      .filter(h => (filterDate ? h.date.startsWith(filterDate) : true))
       .sort((a, b) => new Date(b.date) - new Date(a.date));
   }, [history, search, filterDate]);
 
@@ -78,8 +92,9 @@ const Clientes = () => {
         </div>
       </div>
 
-      {/* Busca e filtros */}
+      {/* Barra de filtros */}
       <div className="flex flex-col items-center gap-4 sm:flex-row">
+        {/* Buscar por nome */}
         <input
           type="text"
           placeholder="Buscar cliente..."
@@ -87,12 +102,27 @@ const Clientes = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+
+        {/* Filtrar por data */}
         <input
           type="date"
           className="p-2 border rounded"
           value={filterDate}
           onChange={(e) => setFilterDate(e.target.value)}
         />
+
+        {/* Botão limpar filtros */}
+        <button
+          className="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-500"
+          onClick={() => {
+            setSearch("");
+            setFilterDate("");
+          }}
+        >
+          Limpar filtros
+        </button>
+
+        {/* Botão adicionar atendimento */}
         <button
           className="flex items-center gap-2 px-4 py-2 text-white bg-gray-800 rounded hover:bg-gray-700"
           onClick={() => setShowForm(!showForm)}
