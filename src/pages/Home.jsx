@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { Link } from "react-router-dom";
+
 import {
   BarChart2,
   DollarSign,
@@ -9,7 +12,9 @@ import {
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, BarChart, Bar } from "recharts";
 
 const Home = () => {
-  // Dados de exemplo (vão vir do backend depois)
+  const { user } = useContext(AuthContext);
+  const role = user.role; // 'dono' ou 'funcionario'
+
   const financialData = [
     { month: "Jan", revenue: 12000 },
     { month: "Feb", revenue: 15000 },
@@ -38,28 +43,28 @@ const Home = () => {
       value: "R$ 12.540,00",
       icon: <DollarSign className="w-8 h-8 text-white" />,
       color: "bg-green-500",
-      link: "/financeiro",
+      link: role === "dono" ? "/financeiro" : "/financeiro-funcionario",
     },
     {
       title: "Agenda",
       value: "7 horários hoje",
       icon: <CalendarDays className="w-8 h-8 text-white" />,
       color: "bg-yellow-500",
-      link: "/agenda",
+      link: role === "dono" ? "/agenda" : "/agenda-funcionario",
     },
     {
       title: "Estoque",
       value: "25 itens em estoque",
       icon: <BarChart2 className="w-8 h-8 text-white" />,
       color: "bg-blue-500",
-      link: "/estoque",
+      link: "/estoque", // mesmo para ambos
     },
     {
       title: "Chatbot",
       value: "10 mensagens novas",
       icon: <MessageCircle className="w-8 h-8 text-white" />,
       color: "bg-purple-500",
-      link: "/chatbot",
+      link: "/chatbot", // mesmo para ambos
     },
   ];
 
@@ -79,12 +84,12 @@ const Home = () => {
               {card.icon}
             </div>
             <p className="text-lg font-bold">{card.value}</p>
-            <a
-              href={card.link}
+            <Link
+              to={card.link}
               className="inline-flex items-center mt-4 font-medium text-white hover:underline"
             >
               Abrir <ArrowRightCircle className="w-5 h-5 ml-2" />
-            </a>
+            </Link>
           </div>
         ))}
       </div>

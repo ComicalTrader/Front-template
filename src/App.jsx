@@ -1,35 +1,60 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Sidebar from "./components/Sidebar";
-import Home from "./pages/Home";
+import React, { useContext } from "react";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { AuthContext } from "./context/AuthContext";
+import HomeDono from "./pages/HomeDono";
+import HomeFuncionario from "./pages/HomeFuncionario";
 import Agenda from "./pages/Agenda";
 import Financeiro from "./pages/Financeiro";
 import Clientes from "./pages/Clientes";
 import Estoque from "./pages/Estoque";
 import Chatbot from "./pages/Chatbot";
 import Configuracoes from "./pages/Configuracoes";
+import Login from "./pages/Login";
+import MainLayout from "./components/MainLayout";
+import FinanceiroFuncionario from "./pages/FinanceiroFuncionario";
 
-// import Login from "./pages/Login"; // deixamos de fora por enquanto
+function App() {
+  const { user } = useContext(AuthContext);
 
-const App = () => {
+  if (!user) return <Login />;
+
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <main className="flex-1 p-6 bg-gray-100">
-        <Routes>
-          {/* Redireciona automaticamente para Home */}
-          <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/agenda" element={<Agenda />} />
+    <Routes>
+      {/* Redirecionamento inicial */}
+      <Route
+        path="/"
+        element={
+          <Navigate
+            to={user.role === "dono" ? "/dashboard-dono" : "/dashboard-funcionario"}
+          />
+        }
+      />
+
+      {/* Rotas do Dono */}
+      {user.role === "dono" && (
+        <Route element={<MainLayout />}>
+          <Route path="/dashboard-dono" element={<HomeDono />} />
           <Route path="/financeiro" element={<Financeiro />} />
-          <Route path="/clientes" element={<Clientes />} />
           <Route path="/estoque" element={<Estoque />} />
-          <Route path="/chatbot" element={<Chatbot />} />
+          <Route path="/clientes" element={<Clientes />} />
+          <Route path="/agenda" element={<Agenda />} />
           <Route path="/configuracoes" element={<Configuracoes />} />
-        </Routes>
-      </main>
-    </div>
+          <Route path="/chatbot" element={<Chatbot />} />
+        </Route>
+      )}
+
+      {/* Rotas do Funcionário */}
+      {user.role === "funcionario" && (
+        <Route element={<MainLayout />}>
+          <Route path="/dashboard-funcionario" element={<HomeFuncionario />} />
+          <Route path="/financeiro-funcionario" element={<FinanceiroFuncionario />} />
+          <Route path="/agenda-funcionario" element={<Agenda />} />
+          <Route path="/clientes" element={<Clientes />} />
+          <Route path="/chatbot" element={<Chatbot />} />
+        </Route>
+      )}
+    </Routes>
   );
-};
+}
 
 export default App;

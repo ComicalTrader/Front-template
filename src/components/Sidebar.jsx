@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Home,
@@ -13,15 +13,39 @@ import {
   Search,
   X,
 } from "lucide-react";
+import { AuthContext } from "../context/AuthContext";
 
 const Sidebar = () => {
+  const { user } = useContext(AuthContext);
+  const role = user.role; // 'dono' ou 'funcionario'
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isHover, setIsHover] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const searchRef = useRef(null);
 
-  // Fecha a barra ao clicar fora
+  // Menus por role
+  const menusDono = [
+    { name: "Home", path: "/dashboard-dono", icon: Home },
+    { name: "Agenda", path: "/agenda", icon: Calendar },
+    { name: "Financeiro", path: "/financeiro", icon: DollarSign },
+    { name: "Clientes", path: "/clientes", icon: Users },
+    { name: "Estoque", path: "/estoque", icon: Box },
+    { name: "Chatbot", path: "/chatbot", icon: User },
+    { name: "Configurações", path: "/configuracoes", icon: Settings },
+  ];
+
+  const menusFuncionario = [
+    { name: "Home", path: "/dashboard-funcionario", icon: Home },
+    { name: "Agenda", path: "/agenda-funcionario", icon: Calendar },
+    { name: "Financeiro", path: "/financeiro-funcionario", icon: DollarSign },
+    { name: "Clientes", path: "/clientes", icon: Users },
+    { name: "Chatbot", path: "/chatbot", icon: User },
+  ];
+
+  const menus = role === "dono" ? menusDono : menusFuncionario;
+
+  // Fecha pesquisa ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -32,7 +56,7 @@ const Sidebar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Fecha com tecla Esc
+  // Fecha pesquisa com ESC
   useEffect(() => {
     const handleEsc = (event) => {
       if (event.key === "Escape") setShowSearch(false);
@@ -41,20 +65,8 @@ const Sidebar = () => {
     return () => document.removeEventListener("keydown", handleEsc);
   }, []);
 
-  const mainItems = [
-    { name: "Home", path: "/home", icon: Home },
-    { name: "Agenda", path: "/agenda", icon: Calendar },
-    { name: "Financeiro", path: "/financeiro", icon: DollarSign },
-    { name: "Clientes", path: "/clientes", icon: Users },
-    { name: "Estoque", path: "/estoque", icon: Box },
-    { name: "Chatbot", path: "/chatbot", icon: User },
-  ];
-
-  const configItem = { name: "Configurações", path: "/configuracoes", icon: Settings };
-
   return (
     <>
-      {/* 🧭 SIDEBAR */}
       <aside
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
@@ -64,7 +76,7 @@ const Sidebar = () => {
           ${isOpen || isHover ? "w-64 items-start" : "w-20 items-center"}
         `}
       >
-        {/* 🔘 Botão de abrir/fechar */}
+        {/* Botão de abrir/fechar */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="flex items-center justify-center w-10 h-10 mb-8 text-white transition-colors duration-200 bg-gray-800 rounded-lg hover:bg-gray-700"
@@ -72,14 +84,14 @@ const Sidebar = () => {
           {isOpen ? <ChevronLeft size={22} /> : <Menu size={22} />}
         </button>
 
-        {/* 🧾 Título */}
+        {/* Título */}
         {(isOpen || isHover) && (
           <h2 className="mb-6 text-2xl font-bold text-white transition-opacity duration-300">
             BarberPro
           </h2>
         )}
 
-        {/* 🔍 Ícone de pesquisa */}
+        {/* Botão pesquisa */}
         <button
           onClick={() => setShowSearch(true)}
           className="flex items-center justify-center w-full gap-4 px-3 py-2 mb-4 transition rounded-xl bg-gray-800/70 hover:bg-gray-800"
@@ -92,9 +104,9 @@ const Sidebar = () => {
           {(isOpen || isHover) && <span className="text-sm">Pesquisar</span>}
         </button>
 
-        {/* 📋 Menu principal */}
+        {/* Menus principais */}
         <ul className="flex flex-col flex-1 w-full gap-2">
-          {mainItems.map((item) => {
+          {menus.map((item) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;
 
@@ -119,34 +131,13 @@ const Sidebar = () => {
             );
           })}
         </ul>
-
-        {/* ⚙️ Configurações */}
-        <ul className="flex flex-col w-full gap-2">
-          <li>
-            <Link
-              to={configItem.path}
-              className={`flex items-center gap-4 px-3 py-2 rounded-xl transition-all duration-200 ${
-                location.pathname === configItem.path
-                  ? "bg-gray-800 text-white font-semibold"
-                  : "text-gray-400 hover:text-white hover:bg-gray-800"
-              }`}
-            >
-              <configItem.icon
-                className="transition-transform duration-300"
-                size={isOpen || isHover ? 22 : 28}
-                strokeWidth={1.8}
-              />
-              {(isOpen || isHover) && <span className="text-sm">{configItem.name}</span>}
-            </Link>
-          </li>
-        </ul>
       </aside>
 
-      {/* 🔎 Barra de pesquisa no topo */}
+      {/* Barra de pesquisa */}
       {showSearch && (
         <div
           ref={searchRef}
-          className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center px-6 py-4 shadow-md  bg-gray-900/80 backdrop-blur-md"
+          className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center px-6 py-4 shadow-md bg-gray-900/80 backdrop-blur-md"
         >
           <div className="relative w-full max-w-lg">
             <input

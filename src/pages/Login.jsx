@@ -1,49 +1,52 @@
-import { useNavigate } from "react-router-dom";
+import React from "react";
+
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
-const Login = () => {
-  const [user, setUser] = useState("");
-  const [pass, setPass] = useState("");
-  const navigate = useNavigate();
+export default function Login() {
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // validação simples
-    if (user && pass) {
-      navigate("/app");
-    }
+    login(email, password);
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-900">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-8 rounded-xl shadow-lg w-80"
-      >
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">BarberPro</h1>
-        <input
-          type="text"
-          placeholder="Usuário"
-          className="w-full mb-3 p-2 border rounded"
-          value={user}
-          onChange={(e) => setUser(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          className="w-full mb-5 p-2 border rounded"
-          value={pass}
-          onChange={(e) => setPass(e.target.value)}
-        />
-        <button
-          type="submit"
-          className="w-full bg-gray-900 text-white p-2 rounded hover:bg-gray-800"
-        >
-          Entrar
-        </button>
-      </form>
+    <div className="flex items-center justify-center min-h-screen bg-gray-900">
+      <div className="p-8 bg-gray-800 shadow-lg rounded-2xl w-96">
+        <h1 className="mb-6 text-2xl font-bold text-center text-white">
+          Login Barbearia
+        </h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="email"
+            placeholder="E-mail"
+            className="w-full p-3 text-white bg-gray-700 rounded-lg focus:outline-none"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Senha"
+            className="w-full p-3 text-white bg-gray-700 rounded-lg focus:outline-none"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            type="submit"
+            className="w-full p-3 font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700"
+          >
+            Entrar
+          </button>
+        </form>
+        <p className="mt-4 text-sm text-center text-gray-400">
+          Acesse com:<br />
+          <span className="text-white">dono@barbearia.com / 1234</span><br />
+          <span className="text-white">funcionario@barbearia.com / 1234</span>
+        </p>
+      </div>
     </div>
   );
-};
-
-export default Login;
+}
