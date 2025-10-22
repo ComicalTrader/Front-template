@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext";
 import HomeDono from "./pages/HomeDono";
 import HomeFuncionario from "./pages/HomeFuncionario";
-import Agenda from "./pages/Agenda";
+import Agenda from "./pages/AgendaAdmin";
 import Financeiro from "./pages/Financeiro";
 import Clientes from "./pages/Clientes";
 import Estoque from "./pages/Estoque";
