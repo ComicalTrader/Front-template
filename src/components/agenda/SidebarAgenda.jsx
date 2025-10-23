@@ -3,7 +3,6 @@ import { Link } from "react-router-dom"; // IMPORTANTE: react-router-dom
 
 export default function SidebarAgenda() {
   const menu = [
-    { name: "Dashboard", path: "/dashboard" },
     { name: "Agenda", path: "/agenda" },
     { name: "Clientes", path: "/clientes" },
     { name: "Funcionários", path: "/funcionarios" },

@@ -4,14 +4,14 @@ import { AuthContext } from "./context/AuthContext";
 import HomeDono from "./pages/HomeDono";
 import HomeFuncionario from "./pages/HomeFuncionario";
 import Agenda from "./pages/AgendaAdmin";
-import Financeiro from "./pages/Financeiro";
+import Financeiro from "./pages/Administrador/Financeiro";
 import Clientes from "./pages/Clientes";
 import Estoque from "./pages/Estoque";
 import Chatbot from "./pages/Chatbot";
 import Configuracoes from "./pages/Configuracoes";
 import Login from "./pages/Login";
 import MainLayout from "./components/MainLayout";
-import FinanceiroFuncionario from "./pages/FinanceiroFuncionario";
+import FinanceiroFuncionario from "./pages/Funcionario/FinanceiroFuncionario";
 
 function App() {
   const { user } = useContext(AuthContext);
