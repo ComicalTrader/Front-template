@@ -7,6 +7,7 @@ import TransactionForm from "../../components/Finance/TransactionForm";
 import MonthlySummary from "../../components/Finance/MonthlySummary";
 import { useFinanceiro } from "../../hooks/useFinanceiro";
 
+
 const Financeiro = () => {
   const {
     transacoesFiltradas,
