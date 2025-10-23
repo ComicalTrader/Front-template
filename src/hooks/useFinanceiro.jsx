@@ -14,7 +14,23 @@ export function useFinanceiro({ tipoUsuario = "dono" } = {}) {
     funcionario: "Todos",
     cliente: "Todos",
   });
+    const [mesAtual, setMesAtual] = useState(new Date().getMonth());
+  const [anoAtual, setAnoAtual] = useState(new Date().getFullYear());
+  const nomesMeses = [
+    "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+    "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+  ];
 
+  const mudarMes = (direcao) => {
+    let novoMes = mesAtual + direcao;
+    let novoAno = anoAtual;
+
+    if (novoMes > 11) { novoMes = 0; novoAno++; }
+    else if (novoMes < 0) { novoMes = 11; novoAno--; }
+
+    setMesAtual(novoMes);
+    setAnoAtual(novoAno);
+  };
   // Mock de dados iniciais
   useEffect(() => {
     // Transações gerais

@@ -6,7 +6,11 @@ import FinanceCalendar from "../../components/Finance/FinanceCalendar";
 import TransactionForm from "../../components/Finance/TransactionForm";
 import MonthlySummary from "../../components/Finance/MonthlySummary";
 import { useFinanceiro } from "../../hooks/useFinanceiro";
-
+import { 
+  LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, 
+  BarChart, Bar, ResponsiveContainer 
+} from "recharts";
+import { Tooltip } from "react-tooltip"; // npm i react-tooltip
 
 const Financeiro = () => {
   const {
@@ -18,7 +22,6 @@ const Financeiro = () => {
     custosVariaveis,
     ticketMedio,
     maiorTransacao,
-    numTransacoes,
     resumoPorFuncionario,
     modalAberto,
     transacaoSelecionada,
@@ -28,9 +31,14 @@ const Financeiro = () => {
     removerTransacao,
     filtro,
     setFiltro,
+    receitaMeses,
+    vendasPorCategoria,
+    contasVencidas,
+    mesAtual,
+    anoAtual,
+    nomesMeses,
+    mudarMes,
   } = useFinanceiro();
-
-  const mesAtual = new Date().getMonth() + 1;
 
   return (
     <div className="min-h-screen p-8 space-y-10 bg-gray-100">
@@ -42,17 +50,22 @@ const Financeiro = () => {
         <FinanceCard title="Entradas" value={`R$ ${entradas.toFixed(2)}`} color="text-blue-600" />
         <FinanceCard title="Saídas" value={`R$ ${saidas.toFixed(2)}`} color="text-red-600" />
         <FinanceCard title="Lucro do Mês" value={`R$ ${(entradas - saidas).toFixed(2)}`} color="text-purple-600" />
-        <FinanceCard title="Ticket Médio" value={`R$ ${ticketMedio.toFixed(2)}`} color="text-indigo-600" />
+        <FinanceCard title="Ticket Médio" value={`R$ ${ticketMedio.toFixed(2)}`} color="text-indigo-600" tooltip="Média de valor gasto por cliente" />
         <FinanceCard title="Maior Transação" value={`R$ ${maiorTransacao.toFixed(2)}`} color="text-pink-600" />
       </div>
 
       {/* 2️⃣ Custos Fixos x Variáveis */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <CategoryCard title="Custos Fixos" value={custosFixos} color="text-yellow-500" />
+        <CategoryCard 
+          title="Custos Fixos" 
+          value={custosFixos} 
+          color="text-yellow-500"
+          tooltip="Despesas recorrentes que a empresa precisa pagar todo mês"
+        />
         <CategoryCard title="Custos Variáveis" value={custosVariaveis} color="text-orange-500" />
       </div>
 
-      {/* 3️⃣ Tabela de Transações com filtros */}
+      {/* 3️⃣ Filtros e tabela */}
       <div className="flex items-center justify-between mb-4">
         <div className="space-x-2">
           <select value={filtro.tipo} onChange={e => setFiltro({...filtro, tipo: e.target.value})} className="px-2 py-1 border rounded">
@@ -78,10 +91,84 @@ const Financeiro = () => {
 
       <FinanceTable transactions={transacoesFiltradas} onEdit={abrirModal} onRemove={removerTransacao} />
 
-      {/* 4️⃣ Calendário compacto */}
+      {/* 4️⃣ Controle de mês */}
+      <div className="flex items-center justify-center mt-6 space-x-4">
+        <button onClick={() => mudarMes(-1)} className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">&lt;</button>
+        <span className="font-semibold">{nomesMeses[mesAtual]} {anoAtual}</span>
+        <button onClick={() => mudarMes(1)} className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">&gt;</button>
+      </div>
+
+      {/* 5️⃣ Gráficos */}
+      <div className="grid grid-cols-1 gap-6 mt-4 md:grid-cols-2">
+        <div className="p-4 bg-white shadow rounded-xl">
+          <p className="mb-2 text-sm font-medium text-gray-500">Receita Mês a Mês</p>
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={receitaMeses().map((v,i)=>({mes:i+1, receita:v}))}>
+              <XAxis dataKey="mes" />
+              <YAxis />
+              <RechartsTooltip />
+              <Line type="monotone" dataKey="receita" stroke="#3b82f6" strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="p-4 bg-white shadow rounded-xl">
+          <p className="mb-2 text-sm font-medium text-gray-500">Vendas por Categoria</p>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={Object.entries(vendasPorCategoria()).map(([cat, valor])=>({categoria:cat, valor}))}>
+              <XAxis dataKey="categoria" />
+              <YAxis />
+              <RechartsTooltip />
+              <Bar dataKey="valor" fill="#10b981" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* 6️⃣ Fluxo de caixa resumido */}
+      <div className="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2">
+        <FinanceCard title="Fluxo de Entradas" value={`R$ ${entradas.toFixed(2)}`} color="text-green-600" />
+        <FinanceCard title="Fluxo de Saídas" value={`R$ ${saidas.toFixed(2)}`} color="text-red-600" />
+      </div>
+
+      {/* 7️⃣ KPIs de clientes com tooltip */}
+      <div className="grid grid-cols-1 gap-6 mt-6 md:grid-cols-3">
+        <FinanceCard 
+          title="Ticket Médio por Cliente" 
+          value={`R$ ${ticketMedio.toFixed(2)}`} 
+          color="text-purple-600" 
+          tooltip="Média de gasto por cliente em entradas" 
+        />
+        <FinanceCard 
+          title="Clientes Atendidos" 
+          value={ [...new Set(transacoesFiltradas.map(t=>t.cliente))].length } 
+          color="text-blue-600" 
+          tooltip="Número total de clientes únicos atendidos neste mês" 
+        />
+        <FinanceCard 
+          title="Taxa de Retenção" 
+          value={`${Math.round((transacoesFiltradas.filter((t,i,a)=>a.filter(x=>x.cliente===t.cliente).length>1).length / [...new Set(transacoesFiltradas.map(t=>t.cliente))].length)*100)}%`} 
+          color="text-green-600" 
+          tooltip="Porcentagem de clientes que voltaram neste mês" 
+        />
+      </div>
+
+      {/* 8️⃣ Alertas de contas vencidas */}
+      {contasVencidas().length > 0 && (
+        <div className="p-4 mt-6 text-red-800 bg-red-100 shadow rounded-xl">
+          <p className="mb-2 font-semibold">⚠ Contas Vencidas</p>
+          <ul className="ml-5 text-sm list-disc">
+            {contasVencidas().map(d => (
+              <li key={d.id}>{d.descricao} - R$ {d.valor.toFixed(2)} (Vencimento: {d.vencimento})</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* 9️⃣ Calendário compacto */}
       <FinanceCalendar month={mesAtual} transactions={transacoesFiltradas} compact onEdit={abrirModal} />
 
-      {/* 5️⃣ Resumo Mensal */}
+      {/* 10️⃣ Resumo Mensal */}
       <MonthlySummary
         entradas={entradas}
         saidasFixas={custosFixos}
@@ -89,8 +176,10 @@ const Financeiro = () => {
         lucro={entradas - (custosFixos + custosVariaveis)}
       />
 
-      {/* Modal */}
+      {/* 11️⃣ Modal */}
       {modalAberto && <TransactionForm onClose={fecharModal} onSave={salvarTransacao} transaction={transacaoSelecionada} />}
+
+      <Tooltip id="tooltip" />
     </div>
   );
 };
