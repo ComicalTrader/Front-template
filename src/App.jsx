@@ -12,6 +12,7 @@ import Configuracoes from "./pages/Configuracoes";
 import Login from "./pages/Login";
 import MainLayout from "./components/MainLayout";
 import FinanceiroFuncionario from "./pages/Funcionario/FinanceiroFuncionario";
+import Receitas from "./pages/Administrador/Receitas";
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -35,6 +36,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/dashboard-dono" element={<HomeDono />} />
           <Route path="/financeiro" element={<Financeiro />} />
+          <Route path="/receitas" element={<Receitas />} />
           <Route path="/estoque" element={<Estoque />} />
           <Route path="/clientes" element={<Clientes />} />
           <Route path="/agenda" element={<Agenda />} />

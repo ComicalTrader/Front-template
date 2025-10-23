@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 export default function SidebarFinanceiro() {
   const menu = [
     { name: "Visão Geral", path: "/financeiro" },
-    { name: "Despesas", path: "/financeiro/despesas" },
-    { name: "Receitas", path: "/financeiro/receitas" },
+    { name: "Gestão de Receitas", path: "/receitas" },
+    { name: "Despesas", path: "/financeiro/Despesas" },
     { name: "Relatórios", path: "/financeiro/relatorios" },
   ];
 
