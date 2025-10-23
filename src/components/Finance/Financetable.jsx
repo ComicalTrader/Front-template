@@ -17,11 +17,11 @@ const FinanceTable = ({ transactions, onEdit, onRemove }) => {
         <tbody>
           {transactions.map(t => (
             <tr key={t.id} className="border-b">
-              <td className="px-4 py-2">{t.data}</td>
-              <td className="px-4 py-2">{t.descricao}</td>
-              <td className="px-4 py-2">{t.tipo}</td>
-              <td className="px-4 py-2">{t.categoria}</td>
-              <td className="px-4 py-2">R$ {t.valor.toFixed(2)}</td>
+              <td className="px-4 py-2">{t.data ?? "—"}</td>
+              <td className="px-4 py-2">{t.descricao ?? "—"}</td>
+              <td className="px-4 py-2">{t.tipo ?? "—"}</td>
+              <td className="px-4 py-2">{t.categoria ?? "—"}</td>
+              <td className="px-4 py-2">R$ {(t.valor ?? 0).toFixed(2)}</td>
               <td className="px-4 py-2 space-x-2">
                 <button
                   onClick={() => onEdit(t)}

@@ -71,7 +71,7 @@ const Sidebar = () => {
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
         className={`
-          flex flex-col h-screen p-4 text-white bg-gray-900 shadow-lg
+          flex flex-col p-4 text-white bg-gray-900 shadow-lg
           transition-all duration-300 ease-in-out
           ${isOpen || isHover ? "w-64 items-start" : "w-20 items-center"}
         `}

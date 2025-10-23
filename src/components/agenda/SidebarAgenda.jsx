@@ -17,7 +17,7 @@ export default function SidebarAgenda() {
         {menu.map((item) => (
           <Link
             key={item.name}
-            to={item.path} // USANDO "to" EM VEZ DE href
+            to={item.path} 
             className="px-3 py-2 rounded hover:bg-gray-700"
           >
             {item.name}

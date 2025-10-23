@@ -8,13 +8,15 @@ export function useFinanceiro({ tipoUsuario = "dono" } = {}) {
   const [vendas, setVendas] = useState([]);
   const [modalAberto, setModalAberto] = useState(false);
   const [transacaoSelecionada, setTransacaoSelecionada] = useState(null);
+
   const [filtro, setFiltro] = useState({
     tipo: "Todos",
     categoria: "Todos",
     funcionario: "Todos",
     cliente: "Todos",
   });
-    const [mesAtual, setMesAtual] = useState(new Date().getMonth());
+
+  const [mesAtual, setMesAtual] = useState(new Date().getMonth());
   const [anoAtual, setAnoAtual] = useState(new Date().getFullYear());
   const nomesMeses = [
     "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
@@ -60,16 +62,27 @@ export function useFinanceiro({ tipoUsuario = "dono" } = {}) {
       { id: 2, tipo: "Produto", valor: 50, cliente: "Carlos", data: "2025-10-19", funcionario: "Maria" },
       { id: 3, tipo: "Combo", valor: 200, cliente: "Ana", data: "2025-10-18", funcionario: "Maria" },
     ]);
+    
+    setFiltro({
+      tipo: "Todos",
+      categoria: "Todos",
+      funcionario: "Todos",
+      cliente: "Todos",
+    });
   }, [tipoUsuario]);
 
   // Filtragem de transações
-  const transacoesFiltradas = transacoes.filter(t => 
-    (filtro.tipo === "Todos" || t.tipo === filtro.tipo) &&
-    (filtro.categoria === "Todos" || t.categoria === filtro.categoria) &&
-    (filtro.funcionario === "Todos" || t.funcionario === filtro.funcionario) &&
-    (filtro.cliente === "Todos" || t.cliente === filtro.cliente)
-  );
-
+  const transacoesFiltradas = transacoes.filter(t => {
+    const data = new Date(t.data);
+    return (
+      (filtro.tipo === "Todos" || t.tipo === filtro.tipo) &&
+      (filtro.categoria === "Todos" || t.categoria === filtro.categoria) &&
+      (filtro.funcionario === "Todos" || t.funcionario === filtro.funcionario) &&
+      (filtro.cliente === "Todos" || t.cliente === filtro.cliente) &&
+      data.getMonth() === mesAtual &&
+      data.getFullYear() === anoAtual
+    );
+  });
   // Cálculos
   const entradas = transacoesFiltradas.filter(t => t.tipo === "Entrada").reduce((acc, t) => acc + t.valor, 0);
   const saidas = transacoesFiltradas.filter(t => t.tipo === "Saída").reduce((acc, t) => acc + t.valor, 0);
@@ -171,5 +184,9 @@ export function useFinanceiro({ tipoUsuario = "dono" } = {}) {
     removerTransacao,
     filtro,
     setFiltro,
+    mesAtual, 
+    anoAtual, 
+    nomesMeses, 
+    mudarMes
   };
 }
