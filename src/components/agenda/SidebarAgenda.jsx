@@ -5,9 +5,6 @@ export default function SidebarAgenda() {
   const menu = [
     { name: "Agenda", path: "/agenda" },
     { name: "Clientes", path: "/clientes" },
-    { name: "Funcionários", path: "/funcionarios" },
-    { name: "Vendas", path: "/vendas" },
-    { name: "Relatórios", path: "/relatorios" },
   ];
 
   return (
