@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Dashboard from "../components/Clientes/Dashboard";
 import Filters from "../components/Clientes/Filters";
 import FormCliente from "../components/Clientes/FormCliente";
 import TableClientes from "../components/Clientes/TableClientes";
@@ -32,11 +31,6 @@ const Clientes = () => {
     if (location.state?.filterMonth) setFilterDate(location.state.filterMonth);
   }, [location.state]);
 
-  const today = new Date().toISOString().slice(0, 10);
-  const totalToday = history.filter(h => h.date === today).length;
-  const totalMonth = history.filter(h => h.date.slice(0, 7) === today.slice(0, 7)).length;
-  const revenueMonth = history.filter(h => h.date.slice(0, 7) === today.slice(0, 7)).reduce((acc, h) => acc + Number(h.value), 0);
-
   const addEntry = (e) => {
     e.preventDefault();
     setHistory([...history, newEntry]);
@@ -51,18 +45,38 @@ const Clientes = () => {
 
   const filteredHistory = useMemo(() => {
     return history
-      .filter(h => h.name.toLowerCase().includes(search.toLowerCase()))
-      .filter(h => (filterDate ? h.date.startsWith(filterDate) : true))
+      .filter(h => search ? h.name.toLowerCase().includes(search.toLowerCase()) : true)
+      .filter(h => filterDate ? h.date.startsWith(filterDate) : true)
       .sort((a, b) => new Date(b.date) - new Date(a.date));
   }, [history, search, filterDate]);
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <Dashboard totalToday={totalToday} totalMonth={totalMonth} revenueMonth={revenueMonth} />
-      <Filters search={search} setSearch={setSearch} filterDate={filterDate} setFilterDate={setFilterDate} showForm={showForm} setShowForm={setShowForm} />
-      {showForm && <FormCliente newEntry={newEntry} setNewEntry={setNewEntry} addEntry={addEntry} />}
-      <TableClientes filteredHistory={filteredHistory} setSelectedClient={setSelectedClient} removeEntry={removeEntry} />
-      <ModalCliente selectedClient={selectedClient} setSelectedClient={setSelectedClient} history={history} />
+      <Filters 
+        search={search} 
+        setSearch={setSearch} 
+        filterDate={filterDate} 
+        setFilterDate={setFilterDate} 
+        showForm={showForm} 
+        setShowForm={setShowForm} 
+      />
+      {showForm && (
+        <FormCliente 
+          newEntry={newEntry} 
+          setNewEntry={setNewEntry} 
+          addEntry={addEntry} 
+        />
+      )}
+      <TableClientes 
+        filteredHistory={filteredHistory || []} 
+        setSelectedClient={setSelectedClient} 
+        removeEntry={removeEntry} 
+      />
+      <ModalCliente 
+        selectedClient={selectedClient} 
+        setSelectedClient={setSelectedClient} 
+        history={history} 
+      />
     </div>
   );
 };
