@@ -3,10 +3,12 @@ import { useReceitas } from "../../hooks/useReceitas";
 
 export default function Receitas() {
   const {
-    receitas,
-    adicionarReceita,
-    atualizarStatus,
-  } = useReceitas();
+  receitas,
+  adicionarReceita,
+  atualizarStatus,
+  removerReceita
+} = useReceitas();
+
 
   // Modais
   const [showServicoModal, setShowServicoModal] = useState(false);
